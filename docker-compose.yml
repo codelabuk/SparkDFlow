@@ -1,5 +1,3 @@
-version: '3'
-
 x-spark-common: &spark-common
   image: apache/spark:3.5.1
   volumes:
@@ -17,8 +15,8 @@ x-airflow-common: &airflow-common
     - ./jobs:/opt/airflow/jobs
     - ./dags:/opt/airflow/dags
     - ./logs:/opt/airflow/logs
-  depends_on:
-    - postgres
+#  depends_on:
+#    - postgres
   networks:
     - code-labuk
 
@@ -49,14 +47,11 @@ services:
       - POSTGRES_DB=airflow
     networks:
       - code-labuk
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "airflow"]
+      interval: 5s
+      retries: 5
 
-  webserver:
-    <<: *airflow-common
-    command: webserver
-    ports:
-      - "8080:8080"
-    depends_on:
-      - scheduler
 
   scheduler:
     <<: *airflow-common
@@ -69,6 +64,22 @@ services:
       --password admin
       --role Admin &&
      airflow scheduler"
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  webserver:
+    <<: *airflow-common
+    command: bash -c "airflow db migrate && airflow webserver"
+    ports:
+      - "8080:8080"
+    depends_on:
+#      scheduler:
+#        condition: service_started
+      postgres:
+        condition: service_healthy
+
+
 
 networks:
   code-labuk:
