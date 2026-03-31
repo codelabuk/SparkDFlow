@@ -1,4 +1,4 @@
-FROM apache/airflow:2.7.1-python3.11
+FROM apache/airflow:2.7.1-python3.8
 
 USER root
 ## Install container
@@ -15,3 +15,5 @@ USER airflow
 RUN pip install  --no-cache-dir\
     apache-airflow-providers-apache-spark==4.1.5 \
     pyspark==3.5.1
+
+RUN python --version

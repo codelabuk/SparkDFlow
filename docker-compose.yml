@@ -2,6 +2,9 @@ x-spark-common: &spark-common
   image: apache/spark:3.5.1
   volumes:
     - ./jobs:/opts/spark/work-dir/jobs
+  environment:
+    PYSPARK_PYTHON: python3.8
+    PYSPARK_DRIVER_PYTHON: python3.8
   networks:
     - code-labuk
 
@@ -9,6 +12,9 @@ x-airflow-common: &airflow-common
   build:
     context: .
     dockerfile: Dockerfile
+  environment:
+    PYSPARK_PYTHON: python3.8
+    PYSPARK_DRIVER_PYTHON: python3.8
   env_file:
     - airflow.env
   volumes:

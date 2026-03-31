@@ -20,14 +20,14 @@ start_task = PythonOperator(
 )
 
 python_job = SparkSubmitOperator(
-    task_id='python_job',
-    conn_id='spark-conn',
-    application='jobs/python/word_count_job.py',
+    task_id="python_job",
+    conn_id="spark-conn",
+    application="jobs/python/word_count_job.py",
     dag=dag
 )
 end = PythonOperator(
-    task_id='end_task',
-    python_callable=lambda: print("Jobs ended"),
+    task_id="end",
+    python_callable = lambda: print("Jobs ended"),
     dag=dag
 )
 
