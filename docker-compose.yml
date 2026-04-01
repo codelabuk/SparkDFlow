@@ -52,10 +52,12 @@ services:
     command: /opt/spark/bin/spark-class org.apache.spark.deploy.history.HistoryServer
     ports:
       - "18080:18080"
+    volumes:
+      - ./spark-logs:/opt/spark/logs
     environment:
       PYSPARK_PYTHON: python3.8
       PYSPARK_DRIVER_PYTHON: python3.8
-      SPARK_HISTORY_OPTS: "-Dspark.history.fs.logDirectory=/opt/spark/logs"
+      SPARK_HISTORY_OPTS: "-Dspark.history.fs.logDirectory=file:/opt/spark/logs"
 
   postgres:
     image: postgres:14.0

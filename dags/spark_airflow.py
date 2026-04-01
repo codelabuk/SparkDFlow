@@ -25,7 +25,7 @@ python_job = SparkSubmitOperator(
     application="jobs/python/word_count_job.py",
     conf={
       "spark.eventLog.enabled": "true",
-      "spark.eventLog.dir": "/opt/spark/logs"
+      "spark.eventLog.dir": "file:/opt/spark/logs"
     },
     dag=dag
 )
@@ -34,6 +34,10 @@ scala_job = SparkSubmitOperator(
     task_id="scala_job",
     conn_id="spark-conn",
     application="jobs/scala/target/scala-2.12/word-count_2.12-0.1.jar",
+     conf={
+      "spark.eventLog.enabled": "true",
+      "spark.eventLog.dir": "file:/opt/spark/logs"
+    },
     dag=dag
 )
 
