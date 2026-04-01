@@ -1,6 +1,9 @@
 .idea
 venv
 venv-dev
+jobs/scala/project
+jobs/scala/target
+jobs/scala/.bsp
 logs
 spark-logs
 __pycache__
