@@ -41,10 +41,23 @@ scala_job = SparkSubmitOperator(
     dag=dag
 )
 
+
+java_job = SparkSubmitOperator(
+    task_id="java_job",
+    conn_id="spark-conn",
+    application="jobs/java/target/spark-job-1.0-SNAPSHOT.jar",
+    conf={
+      "spark.eventLog.enabled": "true",
+      "spark.eventLog.dir": "file:/opt/spark/logs"
+    },
+    java_class="org.codelabuk.WordCountJob",
+    dag=dag
+)
+
 end = PythonOperator(
     task_id="end",
     python_callable = lambda: print("Jobs complete successfully"),
     dag=dag
 )
 
-start_task >> [python_job, scala_job] >> end
+start_task >> [python_job, scala_job, java_job] >> end

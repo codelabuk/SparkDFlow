@@ -4,6 +4,9 @@ venv-dev
 jobs/scala/project
 jobs/scala/target
 jobs/scala/.bsp
+jobs/java/.idea
+jobs/java/target
+jobs/java/.mvn
 logs
 spark-logs
 __pycache__
