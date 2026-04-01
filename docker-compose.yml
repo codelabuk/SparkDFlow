@@ -1,7 +1,8 @@
 x-spark-common: &spark-common
   image: apache/spark:3.5.1
   volumes:
-    - ./jobs:/opts/spark/work-dir/jobs
+    - ./jobs:/opt/spark/work-dir/jobs
+    - ./spark-logs:/opt/spark/logs
   environment:
     PYSPARK_PYTHON: python3.8
     PYSPARK_DRIVER_PYTHON: python3.8
@@ -21,6 +22,7 @@ x-airflow-common: &airflow-common
     - ./jobs:/opt/airflow/jobs
     - ./dags:/opt/airflow/dags
     - ./logs:/opt/airflow/logs
+    - ./spark-logs:/opt/spark/logs
 #  depends_on:
 #    - postgres
   networks:
@@ -44,6 +46,16 @@ services:
     environment:
       SPARK_WORKER_CORES: 2
       SPARK_WORKER_MEMORY: 1g
+
+  spark-history:
+    <<: *spark-common
+    command: /opt/spark/bin/spark-class org.apache.spark.deploy.history.HistoryServer
+    ports:
+      - "18080:18080"
+    environment:
+      PYSPARK_PYTHON: python3.8
+      PYSPARK_DRIVER_PYTHON: python3.8
+      SPARK_HISTORY_OPTS: "-Dspark.history.fs.logDirectory=/opt/spark/logs"
 
   postgres:
     image: postgres:14.0
@@ -79,6 +91,7 @@ services:
     command: bash -c "airflow db migrate && airflow webserver"
     ports:
       - "8080:8080"
+      - "4040:4040"
     depends_on:
 #      scheduler:
 #        condition: service_started

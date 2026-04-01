@@ -2,4 +2,5 @@
 venv
 venv-dev
 logs
+spark-logs
 __pycache__

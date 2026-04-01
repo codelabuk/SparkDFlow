@@ -23,8 +23,13 @@ python_job = SparkSubmitOperator(
     task_id="python_job",
     conn_id="spark-conn",
     application="jobs/python/word_count_job.py",
+    conf={
+      "spark.eventLog.enabled": "true",
+      "spark.eventLog.dir": "/opt/spark/logs"
+    },
     dag=dag
 )
+
 end = PythonOperator(
     task_id="end",
     python_callable = lambda: print("Jobs ended"),
